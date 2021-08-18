@@ -1,0 +1,19 @@
+apiVersion: dep.notifications.lizhe.name/v1
+kind: LzDepNf
+metadata:
+  name: lzdepnf-sample
+spec:
+  watchName: nginx
+  watchNamespace: test
+  mailHost: smtp.gmail.com:587
+  userName: YOUREMAIL@gmail.com
+  from: YOUREMAIL@gmail.com
+  to: YOUEMAIL@gmail.com
+  mailSubject: "{{.DepName}} of {{.DepNamespace}} updated done"
+  mailContent: | 
+    Name: {{.DepName}}<br/>
+    Namespace: {{.DepNamespace}}<br/>
+    Replicas: {{.Replicas}}<br/>
+    Generation: {{.Generation}}<br/>
+    ResourceVersion: {{.ResourceVersion}} <br/>
+    Latest image is: {{.ImageName}}
