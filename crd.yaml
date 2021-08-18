@@ -196,5 +196,4 @@ spec:
           allowPrivilegeEscalation: false
       securityContext:
         runAsNonRoot: true
-      serviceAccountName: lz-depnotifications-controller-manager
       terminationGracePeriodSeconds: 10
