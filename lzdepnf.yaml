@@ -2,6 +2,7 @@ apiVersion: dep.notifications.lizhe.name/v1
 kind: LzDepNf
 metadata:
   name: lzdepnf-sample
+  namespace: lz-depnotifications-watcher-system
 spec:
   watchName: nginx
   watchNamespace: test
