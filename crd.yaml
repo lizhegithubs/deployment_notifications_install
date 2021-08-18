@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: lz-operator-system
+  name: lz-depnotifications-system
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
@@ -11,20 +11,39 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.1
   creationTimestamp: null
-  name: lzops.op.lizhe.name.lizhe.name
+  name: lzdepnfs.dep.notifications.lizhe.name
 spec:
-  group: op.lizhe.name.lizhe.name
+  group: dep.notifications.lizhe.name
   names:
-    kind: Lzop
-    listKind: LzopList
-    plural: lzops
-    singular: lzop
+    kind: LzDepNf
+    listKind: LzDepNfList
+    plural: lzdepnfs
+    singular: lzdepnf
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.watchName
+      name: watchName
+      type: string
+    - jsonPath: .spec.watchNamespace
+      name: watchNamespace
+      type: string
+    - jsonPath: .spec.mailHost
+      name: mailHost
+      type: string
+    - jsonPath: .spec.userName
+      name: userName
+      type: string
+    - jsonPath: .spec.from
+      name: from
+      type: string
+    - jsonPath: .spec.to
+      name: to
+      type: string
+    name: v1
     schema:
       openAPIV3Schema:
-        description: Lzop is the Schema for the lzops API
+        description: LzDepNf is the Schema for the lzdepnfs API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
@@ -35,20 +54,29 @@ spec:
           metadata:
             type: object
           spec:
-            description: LzopSpec defines the desired state of Lzop
+            description: LzDepNfSpec defines the desired state of LzDepNf
             properties:
-              foo:
-                description: Foo is an example field of Lzop. Edit lzop_types.go to remove/update
+              from:
                 type: string
-              lzCommand:
+              mailContent:
                 type: string
-              lzDelAt:
+              mailHost:
                 type: string
-              lzImage:
+              mailSubject:
+                type: string
+              passWord:
+                type: string
+              to:
+                type: string
+              userName:
+                type: string
+              watchName:
+                type: string
+              watchNamespace:
                 type: string
             type: object
           status:
-            description: LzopStatus defines the observed state of Lzop
+            description: LzDepNfStatus defines the observed state of LzDepNf
             properties:
               phase:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run "make" to regenerate code after modifying this file'
@@ -79,19 +107,19 @@ data:
       port: 9443
     leaderElection:
       leaderElect: true
-      resourceName: 860d863a.my.domain
+      resourceName: babcd1c1.my.domain
 kind: ConfigMap
 metadata:
-  name: lz-operator-manager-config
-  namespace: lz-operator-system
+  name: lz-depnotifications-manager-config
+  namespace: lz-depnotifications-system
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     control-plane: controller-manager
-  name: lz-operator-controller-manager-metrics-service
-  namespace: lz-operator-system
+  name: lz-depnotifications-controller-manager-metrics-service
+  namespace: lz-depnotifications-system
 spec:
   ports:
   - name: https
@@ -106,8 +134,8 @@ kind: Deployment
 metadata:
   labels:
     control-plane: controller-manager
-  name: lz-operator-controller-manager
-  namespace: lz-operator-system
+  name: lz-depnotifications-controller-manager
+  namespace: lz-depnotifications-system
 spec:
   replicas: 1
   selector:
@@ -136,7 +164,7 @@ spec:
         - --leader-elect
         command:
         - /manager
-        image: controller:latest
+        image: lizhedockerhub/lz-depnotifications:v0.0.7
         livenessProbe:
           httpGet:
             path: /healthz
@@ -161,4 +189,5 @@ spec:
           allowPrivilegeEscalation: false
       securityContext:
         runAsNonRoot: true
+      serviceAccountName: lz-depnotifications-controller-manager
       terminationGracePeriodSeconds: 10
